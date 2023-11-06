@@ -650,7 +650,6 @@ if app_mode == 'Visualization 📊':
 
 
 # page 3
-import shap
 if app_mode == 'Prediction 🌠':
     st.markdown("# :violet[Prediction 🌠]")
     select_ds =  st.sidebar.selectbox('💾 Select Dataset',DATA_SELECT[model_mode])
@@ -810,16 +809,6 @@ lm.fit(X_train,y_train)'''
         st.write("3) Model Precision Score (in %):", np.round(precision_score*100,2))
         recall_score = recall_score(y_test, predictions, average='weighted')
         st.write("4) Model Recall Score (in %):", np.round(recall_score*100,2))
-
-    # Get SHAP values
-    explainer = shap.Explainer(model)
-    shap_values = explainer.shap_values(X_train)
-    st.subheader("SHAP Values")
-    st.bar_chart(shap_values)
-
-    # Display the model coefficients
-    st.subheader("Model Coefficients")
-    st.write(model.coef_)
 
     @st.cache_resource
     def download_file():
