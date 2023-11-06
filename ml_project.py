@@ -770,7 +770,7 @@ lm.fit(X_train,y_train)'''
     #st.write(metric_name+"_train", round(metric_train, 3))
     #st.write(metric_name+"_test", round(metric_test, 3))
     if track_with_mlflow:
-        mlflow.sklearn.log_model(lm, "top_model_v1")
+       # mlflow.sklearn.log_model(lm, "top_model_v1")
         mlflow.log_metric("mae", mae)
         mlflow.log_metric("mse", mse)
         mlflow.log_metric("r2", r2)
