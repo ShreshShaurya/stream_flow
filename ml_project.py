@@ -729,6 +729,8 @@ lm.fit(X_train,y_train)'''
     if not start_training:
         st.stop()
 
+    if mlflow.active_run():
+        mlflow.end_run()
     if track_with_mlflow:
         #mlflow.set_tracking_uri("./model_metrics")
         tracking_url_type_store = urlparse(mlflow.get_tracking_uri()).scheme
@@ -773,8 +775,7 @@ lm.fit(X_train,y_train)'''
         mlflow.log_metric("mse", mse)
         mlflow.log_metric("r2", r2)
         mlflow.end_run()
-    if mlflow.active_run():
-        mlflow.end_run()
+    
 
     # Save the model to a PKL file
     with open('model.pkl', 'wb') as file:
