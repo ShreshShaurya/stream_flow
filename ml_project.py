@@ -32,7 +32,7 @@ import altair as alt
 from htbuilder import HtmlElement, div, hr, a, p, img, styles
 from htbuilder.units import percent, px
 import pandas_profiling
-from streamlit_pandas_profiling import st_profile_report
+
 
 
 
@@ -101,7 +101,7 @@ model_mode = st.sidebar.selectbox('🔎 Select Model',['Linear Regression','Logi
 app_mode = st.sidebar.selectbox('📄 Select Page',['Introduction 🏃','Visualization 📊','Prediction 🌠','Deployment 🚀','Chatbot 🤖'])
 
 #load data
-@st.cache_resource(experimental_allow_widgets=True)
+#@st.cache_resource(experimental_allow_widgets=True)
 def get_dataset(select_dataset):
     if "Wine Quality 🍷" in select_dataset:
         df = pd.read_csv("wine_quality_red.csv")
@@ -575,9 +575,10 @@ if app_mode == 'Visualization 📊':
 
     elif select_dataset == "Student Score 💯":
         symbols = st.multiselect("Select two variables",list_variables,["Hours Studied","Performance Index"] )
+        
 
     elif select_dataset == "Income 💵":
-        symbols = st.multiselect("Select two variables",list_variables, ["occupation","education"] )
+        symbols = st.multiselect("Select two variables",list_variables, ["income","fnlwgt"] )
 
     tab1, tab2, tab3, tab4= st.tabs(["Bar Chart 📊","Line Chart 📈","Correlation ⛖","Pairplot 🗠"])  
     #tab1, tab2= st.tabs(["Line Chart","📈 Correlation"])    
@@ -611,7 +612,8 @@ if app_mode == 'Visualization 📊':
 
     tab3.write(" ")
     fig3,ax = plt.subplots(figsize=(25, 25))
-    sns.heatmap(df.corr(),cmap= sns.cubehelix_palette(8),annot = True, ax=ax)
+    df_numeric = df.select_dtypes(include=['number'])
+    sns.heatmap(df_numeric.corr().corr(),cmap= sns.cubehelix_palette(8),annot = True, ax=ax)
     tab3.pyplot(fig3)
     # Compute a correlation matrix and convert to long-form
     #corr_mat = df.corr().stack().reset_index(name="correlation")
@@ -638,14 +640,9 @@ if app_mode == 'Visualization 📊':
         time.sleep(3)
         my_bar.empty()
         df2 = df[[list_variables[0],list_variables[1],list_variables[2],list_variables[3],list_variables[4]]]
-        fig3 = sns.pairplot(df2.sample(500))
+        fig4 = sns.pairplot(df2.sample(500))
         tab4.write(" ")
-        tab4.pyplot(fig3)
-        # 
-        # fig,ax = plt.subplots(figsize=(20, 20))
-        # sns.heatmap(df.corr(),cmap= sns.cubehelix_palette(8),annot = True, ax=ax)
-        
-
+        tab4.pyplot(fig4)
 
 
 
