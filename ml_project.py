@@ -33,7 +33,9 @@ from htbuilder import HtmlElement, div, hr, a, p, img, styles
 from htbuilder.units import percent, px
 import pandas_profiling
 
-
+import plotly.express as px
+import shap
+import streamlit.components.v1 as components
 
 
 data_url = "http://lib.stat.cmu.edu/datasets/boston" 
@@ -98,7 +100,7 @@ model_mode = st.sidebar.selectbox('🔎 Select Model',['Linear Regression','Logi
     
 
 # get pages
-app_mode = st.sidebar.selectbox('📄 Select Page',['Introduction 🏃','Visualization 📊','Prediction 🌠','Deployment 🚀','Chatbot 🤖'])
+app_mode = st.sidebar.selectbox('📄 Select Page',['Introduction 🏃','Visualization 📊','Prediction 🌠','Deployment 🚀','SHAP ⚙️','Chatbot 🤖'])
 
 #load data
 #@st.cache_resource(experimental_allow_widgets=True)
@@ -576,7 +578,6 @@ if app_mode == 'Visualization 📊':
     elif select_dataset == "Student Score 💯":
         symbols = st.multiselect("Select two variables",list_variables,["Hours Studied","Performance Index"] )
         
-
     elif select_dataset == "Income 💵":
         symbols = st.multiselect("Select two variables",list_variables, ["income","fnlwgt"] )
 
@@ -609,21 +610,20 @@ if app_mode == 'Visualization 📊':
     if tab3.button("Show Correlation Code"):
         code = '''sns.heatmap(df.corr(),cmap= sns.cubehelix_palette(8),annot = True, ax=ax)'''
         tab3.code(code, language='python')
-
+    
     tab3.write(" ")
-    fig3,ax = plt.subplots(figsize=(25, 25))
+    #fig3,ax = plt.subplots(figsize=(25, 25))
     df_numeric = df.select_dtypes(include=['number'])
-    sns.heatmap(df_numeric.corr().corr(),cmap= sns.cubehelix_palette(8),annot = True, ax=ax)
-    tab3.pyplot(fig3)
-    # Compute a correlation matrix and convert to long-form
-    #corr_mat = df.corr().stack().reset_index(name="correlation")
-    # g = sns.relplot(
-    #     data=corr_mat,
-    #     x="level_0", y="level_1", hue="correlation", size="correlation",
-    #     palette="vlag", hue_norm=(-1, 1), edgecolor=".7",
-    #     height=14, sizes=(20, 200), size_norm=(-.2, .8))
+    corr = df.corr()
+    fig3 = px.imshow(corr.values,
+                x=corr.index,
+                y=corr.columns,
+                labels=dict(color="Correlation"))
+    fig3.layout.height = 700
+    fig3.layout.width = 700
+    tab3.plotly_chart(fig3,theme="streamlit",use_container_width=True)
 
-
+    from plotly import figure_factory
     tab4.subheader("pairplot Chart 🗠")
     tab4.write(" ")
     if tab4.button("Show pairplot Chart Code"): 
@@ -639,21 +639,28 @@ if app_mode == 'Visualization 📊':
             my_bar.progress(percent_complete + 1, text=progress_text)
         time.sleep(3)
         my_bar.empty()
-        df2 = df[[list_variables[0],list_variables[1],list_variables[2],list_variables[3],list_variables[4]]]
-        fig4 = sns.pairplot(df2.sample(500))
+        # Set the background color
+        #background_color = 'lightgray'
+
+        # Set the style
+        #sns.set(style='ticks', palette='Set2', rc={'axes.facecolor': background_color})
+        df2 = df[[list_variables[0],list_variables[2],list_variables[3],list_variables[4]]]
+        #sns.despine()
+        #fig4 = sns.pairplot(df2.sample(500))
+
+        #for ax in fig4.axes.flat:
+        #     ax.set_facecolor(background_color)
+        fig4 = figure_factory.create_scatterplotmatrix(df2.sample(500),diag='histogram')
+        fig4.layout.height = 1300
+        fig4.layout.width = 1000
+        tab4.plotly_chart(fig4,theme="streamlit")
         tab4.write(" ")
-        tab4.pyplot(fig4)
+       # tab4.pyplot(fig4)
+    
 
-
-
-# page 3
-if app_mode == 'Prediction 🌠':
-    st.markdown("# :violet[Prediction 🌠]")
-    select_ds =  st.sidebar.selectbox('💾 Select Dataset',DATA_SELECT[model_mode])
-    select_dataset, df = get_dataset(select_ds)
-    list_variables = target_variable[select_ds]
-
+def clean_data(select_dataset):
     # converting data
+    global df
     if select_dataset == "Student Score 💯":
         # Use apply with a lambda function to map values
         df['Extracurricular Activities'] = df['Extracurricular Activities'].apply(lambda x: 1 if x == 'Yes' else 0)
@@ -674,8 +681,37 @@ if app_mode == 'Prediction 🌠':
         columns_to_dummy = ['embarked', 'sex','class','alive']
         df = pd.get_dummies(df, columns=columns_to_dummy, drop_first=True)
         df = df.drop('adult_male',axis=1)
+    
+    return df
 
+def predict(target_choice,train_size, new_df,feature_choice):
+    #independent variables / explanatory variables
+    #choosing column for target
+    new_df2 = new_df[feature_choice]
+    x =  new_df2
+    y = df[target_choice]
+    col1,col2 = st.columns(2)
+    col1.subheader("Feature Columns top 25")
+    col1.write(x.head(25))
+    col2.subheader("Target Column top 25")
+    col2.write(y.head(25))
+    #X = df[feature_choice].copy()
+    #y = df['target'].copy()
+    #X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=train_size)
+    X_train, X_test, y_train, y_test = train_test_split(x,y,test_size=train_size)
+    lm = MODELS[model_mode]()
+    model = lm.fit(X_train,y_train)
+    predictions = lm.predict(X_test)
+    return lm,X_train,y_test,predictions,model
 
+# page 3
+if app_mode == 'Prediction 🌠':
+    st.markdown("# :violet[Prediction 🌠]")
+    select_ds =  st.sidebar.selectbox('💾 Select Dataset',DATA_SELECT[model_mode])
+    select_dataset, df = get_dataset(select_ds)
+    list_variables = target_variable[select_ds]
+
+    df = clean_data(select_dataset)
     #choose the dependent variable
     target_choice1 =  st.sidebar.selectbox('🎯 Select Variable to Predict',[list_variables,""])
     target_choice=list_variables
@@ -700,26 +736,6 @@ lm.fit(X_train,y_train)'''
         st.code(code1, language='python')
         st.code(code2, language='python')
     
-    @st.cache_resource
-    def predict(target_choice,train_size, new_df,feature_choice):
-        #independent variables / explanatory variables
-        #choosing column for target
-        new_df2 = new_df[feature_choice]
-        x =  new_df2
-        y = df[target_choice]
-        col1,col2 = st.columns(2)
-        col1.subheader("Feature Columns top 25")
-        col1.write(x.head(25))
-        col2.subheader("Target Column top 25")
-        col2.write(y.head(25))
-        #X = df[feature_choice].copy()
-        #y = df['target'].copy()
-        #X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=train_size)
-        X_train, X_test, y_train, y_test = train_test_split(x,y,test_size=train_size)
-        lm = MODELS[model_mode]()
-        model = lm.fit(X_train,y_train)
-        predictions = lm.predict(X_test)
-        return lm,X_train,y_test,predictions,model
 
     # Mlflow tracking
     track_with_mlflow = st.checkbox("Track with mlflow? 🛤️")
@@ -894,10 +910,57 @@ if app_mode == 'Deployment 🚀':
     #import pandas as pd
     st.write("Prediction :", np.round(loaded_model.predict(data_new)[0],2))
 
+## page 6
+from streamlit_shap import st_shap
+if app_mode == 'SHAP ⚙️':
+    st.markdown("# :violet[Model Explanation ⚙️]")
+    model_mode = "Linear Regression"
+    select_ds = st.sidebar.selectbox('💾 Select Dataset',DATA_SELECT[model_mode])
+    select_dataset, df = get_dataset(select_ds)
+    df1 = clean_data(select_dataset)
+    list_variables = target_variable[select_ds]
+    #choose the dependent variable
+    target_choice1 =  st.sidebar.selectbox('🎯 Select Variable to Predict',[list_variables,""])
+    target_choice=list_variables
+    st.experimental_set_query_params(saved_target=target_choice)
+    
+    #dropping the target column
+    new_df= df1.drop(labels=target_choice, axis=1)  #axis=1 means we drop data by columns
+    #imp_mean = SimpleImputer(missing_values=np.nan, strategy='mean')
+    #imp_mean.fit()
+    
+    #other column list
+    feature_choice = new_df.columns
+    
+    train_size = st.sidebar.number_input("Train Set Size", min_value=0.00, step=0.01, max_value=1.00, value=0.70)
+    
+    lm,X_train,y_test,predictions,model = predict(target_choice,train_size,new_df,feature_choice)
+
+    explainer = shap.Explainer(model,new_df.sample(50))
+    shap_values = explainer(X_train)
+
+    st_shap(shap.plots.waterfall(shap_values[0]), height=500)
+    st_shap(shap.plots.beeswarm(shap_values), height=500)
+
+
+
+    # def st_shapa(plot, height=None):
+    #     shap_html = f"<head>{shap.getjs()}</head><body>{plot.html()}</body>"
+    #     components.html(shap_html, height=height)
+    explainer = shap.LinearExplainer(model,new_df.sample(50))
+    shap_values = explainer.shap_values(X_train)
+    # visualize the first prediction's explanation (use matplotlib=True to avoid Javascript)
+    st_shap(shap.force_plot(explainer.expected_value, shap_values[0,:], X_train.iloc[0,:]))
+
+
+    # visualize the training set predictions
+    #st_shap(shap.force_plot(explainer.expected_value, shap_values, X_train), 400)
+    #st_shap(shap.force_plot(explainer.expected_value, shap_values[:200,:], X_train.iloc[:200,:]), height=400, width=1000)
+
 from streamlit_chat import message
 import openai
 
-#page 6
+#page 7
 if app_mode == 'Chatbot 🤖':
     st.markdown("# :violet[ Your Personal Chatbot 🤖]")
    # OPENAI_API_KEY = "YOUR_API_KEY"
@@ -1036,7 +1099,6 @@ def layout(*args):
         position="fixed",
         left=0,
         bottom=0,
-        margin=px(0, 0, 0, 0),
         width=percent(100),
         color="black",
         text_align="center",
@@ -1047,9 +1109,7 @@ def layout(*args):
 
     style_hr = styles(
         display="block",
-        margin=px(8, 8, "auto", "auto"),
-        border_style="inset",
-        border_width=px(2)
+        border_style="inset"
     )
 
     body = p()
