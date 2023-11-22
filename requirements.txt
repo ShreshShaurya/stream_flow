@@ -90,20 +90,17 @@ tableauserverclient
 tabulate
 tangled-up-in-unicode
 tenacity
-threadpoolctl
-toml
+
 
 torna
 tqdm
 typeguard
 typing_extensions
-tzdata
-tzloc
+
 urllib3
 validators
 visions
-waitress
-watchdog
+
 websocket-client
 Werkzeug
 yarl
