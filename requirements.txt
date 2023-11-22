@@ -88,21 +88,15 @@ streamlit-pandas-profiling
 streamlit-shap
 tableauserverclient
 tabulate
-tangled-up-in-unicode
-tenacity
 
 
-torna
+
+
 tqdm
-typeguard
-typing_extensions
 
 urllib3
-validators
-visions
 
-websocket-client
-Werkzeug
+
 yarl
 ydata-profiling
 zipp
