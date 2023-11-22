@@ -57,7 +57,7 @@ pandas-profiling
 patsy
 phik
 Pillow
-plotly
+plotly==5.18.0
 protobuf
 pyarrow
 pydantic
@@ -92,7 +92,7 @@ tangled-up-in-unicode
 tenacity
 threadpoolctl
 toml
-toolz
+
 torna
 tqdm
 typeguard
