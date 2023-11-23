@@ -31,7 +31,6 @@ from PIL import Image
 import altair as alt
 from htbuilder import HtmlElement, div, hr, a, p, img, styles
 from htbuilder.units import percent, px
-import pandas_profiling
 
 import plotly.express as px
 import shap
