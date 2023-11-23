@@ -91,7 +91,6 @@ tabulate
 
 
 
-torna
 tqdm
 typeguard
 typing_extensions
