@@ -457,7 +457,7 @@ if app_mode == 'Visualization 📊':
     tab3.write(" ")
     #fig3,ax = plt.subplots(figsize=(25, 25))
     df_numeric = df.select_dtypes(include=['number'])
-    corr = df.corr()
+    corr = df_numeric.corr()
     fig3 = px.imshow(corr.values,
                 x=corr.index,
                 y=corr.columns,
