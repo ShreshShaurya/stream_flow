@@ -915,22 +915,10 @@ if __name__=='__main__':
 
 st.markdown(" ")
 st.markdown("### 👨🏼‍💻 **App Contributors:** ")
-st.markdown("""
-    <style>
-    div[data-testid="column"]:nth-of-type(1)
-                {
-                    border:0px;
-                } 
-    div[data-testid="column"]:nth-of-type(2)
-            {
-                border:0px;
-            } 
-    </style>
-    """,unsafe_allow_html=True)
 
-coln, coln2 = st.columns(2)
-coln.image(['images/gaetan.png'], width=100,caption=["Gaëtan Brison"])
-coln2.image(['images/shre.jpg'], width=100,caption=["Shreshtha Shaurya"])
+coln, coln2 = st.columns([1,5])
+coln.image(['images/gaetan.png'],width = 120,caption=["Gaëtan Brison"])
+coln2.image(['images/shre.jpg'], width = 160,caption=["Shreshtha Shaurya"])
 
 
 st.markdown(f"####  Link to Project Website [here]({'https://github.com/NYU-DS-4-Everyone/Linear-Regression-App'}) 🚀 ")
@@ -995,7 +983,7 @@ def layout(*args):
 def footer2():
     myargs = [
         "👨🏼‍💻 Made by ",
-        link("https://github.com/NYU-DS-4-Everyone", "NYU - Professor Gaëtan Brison"),
+        link("https://github.com/NYU-DS-4-Everyone", "NYU - Professor Gaëtan Brison and Shreshtha Shaurya"),
         "🚀"
     ]
     layout(*myargs)
