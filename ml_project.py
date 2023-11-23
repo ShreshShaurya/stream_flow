@@ -32,6 +32,7 @@ import altair as alt
 from htbuilder import HtmlElement, div, hr, a, p, img, styles
 from htbuilder.units import percent, px
 
+
 import plotly.express as px
 import shap
 import streamlit.components.v1 as components
@@ -133,6 +134,71 @@ target_variable = {
     "Titanic 🛳️": "survived"
 }
 
+def column_set():
+        st.markdown(
+            """
+            <style>
+                div[data-testid="column"]:nth-of-type(1)
+                {
+                    border:1px solid purple;
+                    text-align: center;
+                } 
+
+                div[data-testid="column"]:nth-of-type(2)
+                {
+                    border:1px solid purple;
+                    text-align: center;
+                }
+                div[data-testid="column"]:nth-of-type(3)
+                {
+                    border:1px solid purple;
+                    text-align: center;
+                }
+                div[data-testid="column"]:nth-of-type(4)
+                {
+                    border:1px solid purple;
+                    text-align: center;
+                } 
+                div[data-testid="column"]:nth-of-type(5)
+                {
+                    border:1px solid purple;
+                    text-align: center;
+                } 
+                div[data-testid="column"]:nth-of-type(6)
+                {
+                    border:1px solid purple;
+                    text-align: center;
+                } 
+                div[data-testid="column"]:nth-of-type(7)
+                {
+                    border:1px solid purple;
+                    text-align: center;
+                } 
+                div[data-testid="column"]:nth-of-type(8)
+                {
+                    border:1px solid purple;
+                    text-align: center;
+                } 
+                div[data-testid="column"]:nth-of-type(9)
+                {
+                    border:1px solid purple;
+                    text-align: center;
+                } 
+                div[data-testid="column"]:nth-of-type(10)
+                {
+                    border:1px solid purple;
+                    text-align: center;
+                }
+                div[data-testid="column"]:nth-of-type(11)
+                    {
+                        border:1px solid purple;
+                        text-align: center;
+                    } 
+                
+            </style>
+            """,unsafe_allow_html=True
+        )
+
 
 # page 1 
 if app_mode == 'Introduction 🏃':
@@ -150,68 +216,12 @@ if app_mode == 'Introduction 🏃':
     select_dataset, df = get_dataset(select_data)
 
     st.markdown("### 00 - Show  Dataset")
+
+
+    column_set()
     # Wine Quality dataset
     if select_dataset == "Wine Quality 🍷":
         
-        st.markdown(
-            """
-            <style>
-                div[data-testid="column"]:nth-of-type(1)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                    font-family: bariol;
-                } 
-
-                div[data-testid="column"]:nth-of-type(2)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                   
-                }
-                div[data-testid="column"]:nth-of-type(3)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                }
-                div[data-testid="column"]:nth-of-type(4)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                } 
-                div[data-testid="column"]:nth-of-type(5)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                } 
-                div[data-testid="column"]:nth-of-type(6)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                } 
-                div[data-testid="column"]:nth-of-type(7)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                } 
-                div[data-testid="column"]:nth-of-type(8)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                } 
-                div[data-testid="column"]:nth-of-type(9)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                } 
-                div[data-testid="column"]:nth-of-type(10)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                } 
-            </style>
-            """,unsafe_allow_html=True
-        )
         col1, col2, col3,col4,col5,col6,col7,col8,col9,col10 = st.columns(10)
         col1.markdown(" **fixed acidity** ")
         col1.markdown("most acids involved with wine or fixed or nonvolatile (do not evaporate readily)")
@@ -236,65 +246,6 @@ if app_mode == 'Introduction 🏃':
     
     #real estate
     elif select_dataset == "Titanic 🛳️":
-        
-        st.markdown(
-            """
-            <style>
-                div[data-testid="column"]:nth-of-type(1)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                } 
-
-                div[data-testid="column"]:nth-of-type(2)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                }
-                div[data-testid="column"]:nth-of-type(3)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                }
-                div[data-testid="column"]:nth-of-type(4)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                } 
-                div[data-testid="column"]:nth-of-type(5)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                } 
-                div[data-testid="column"]:nth-of-type(6)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                } 
-                div[data-testid="column"]:nth-of-type(7)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                } 
-                div[data-testid="column"]:nth-of-type(8)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                } 
-                div[data-testid="column"]:nth-of-type(9)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                } 
-                div[data-testid="column"]:nth-of-type(10)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                } 
-
-
-            """,unsafe_allow_html=True
-        )
 
         col1, col2, col3,col4,col5,col6,col7,col8,col9,col10 = st.columns(10)
         col1.markdown(" **Survived** ")
@@ -320,45 +271,6 @@ if app_mode == 'Introduction 🏃':
 
         # Student Score 💯
     elif select_dataset == "Student Score 💯":
-        
-        st.markdown(
-            """
-            <style>
-                div[data-testid="column"]:nth-of-type(1)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                } 
-
-                div[data-testid="column"]:nth-of-type(2)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                }
-                div[data-testid="column"]:nth-of-type(3)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                }
-                div[data-testid="column"]:nth-of-type(4)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                } 
-                div[data-testid="column"]:nth-of-type(5)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                } 
-                div[data-testid="column"]:nth-of-type(6)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                } 
-                
-            </style>
-            """,unsafe_allow_html=True
-        )
 
         col1, col2, col3,col4,col5,col6,= st.columns(6)
         col1.markdown(" **Hours Studied** ")
@@ -377,74 +289,6 @@ if app_mode == 'Introduction 🏃':
     #Income dataset
     elif select_dataset == "Income 💵":
         
-        st.markdown(
-            """
-            <style>
-                div[data-testid="column"]:nth-of-type(1)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                } 
-
-                div[data-testid="column"]:nth-of-type(2)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                }
-                div[data-testid="column"]:nth-of-type(3)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                }
-                div[data-testid="column"]:nth-of-type(4)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                } 
-                div[data-testid="column"]:nth-of-type(5)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                } 
-                div[data-testid="column"]:nth-of-type(6)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                } 
-                div[data-testid="column"]:nth-of-type(7)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                } 
-                div[data-testid="column"]:nth-of-type(8)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                } 
-                div[data-testid="column"]:nth-of-type(9)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                } 
-                div[data-testid="column"]:nth-of-type(10)
-                {
-                    border:1px solid blue;
-                    text-align: center;
-                }
-                div[data-testid="column"]:nth-of-type(11)
-                    {
-                        border:1px solid blue;
-                        text-align: center;
-                    } 
-                div[data-testid="column"]:nth-of-type(12)
-                    {
-                        border:1px solid blue;
-                        text-align: center;
-                    } 
-            </style>
-            """,unsafe_allow_html=True
-        )
-
         col1, col2, col3,col4,col5,col6,col7,col8,col9,col10,col11 = st.columns(11)
         col2.markdown(" **Workclass** ")
         col2.markdown("represents the employment status of an individua")
@@ -1071,7 +915,23 @@ if __name__=='__main__':
 
 st.markdown(" ")
 st.markdown("### 👨🏼‍💻 **App Contributors:** ")
-st.image(['images/gaetan.png'], width=100,caption=["Gaëtan Brison"])
+st.markdown("""
+    <style>
+    div[data-testid="column"]:nth-of-type(1)
+                {
+                    border:0px;
+                } 
+    div[data-testid="column"]:nth-of-type(2)
+            {
+                border:0px;
+            } 
+    </style>
+    """,unsafe_allow_html=True)
+
+coln, coln2 = st.columns(2)
+coln.image(['images/gaetan.png'], width=100,caption=["Gaëtan Brison"])
+coln2.image(['images/shre.jpg'], width=100,caption=["Shreshtha Shaurya"])
+
 
 st.markdown(f"####  Link to Project Website [here]({'https://github.com/NYU-DS-4-Everyone/Linear-Regression-App'}) 🚀 ")
 st.markdown(f"####  Feel free to contribute to the app and give a ⭐️")
