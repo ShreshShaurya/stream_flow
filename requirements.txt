@@ -50,7 +50,7 @@ networkx
 numba
 numpy
 oauthlib
-openai
+openai==0.28
 packaging
 pandas
 pandas-profiling
